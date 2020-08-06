@@ -19,6 +19,10 @@ type Config struct {
 		Port     string `yaml:"port", envconfig:"DB_PORT"`
 		DbName   string `yaml:"dbname", envconfig:"DB_DBNAME"`
 	} `yaml:"database"`
+	Api struct {
+		Endpoint string `yaml:"endpoint", envconfig:"API_ENDPOINT"`
+		Token    string `yaml:"token", envconfig:"API_TOKEN"`
+	} `yaml:"api"`
 }
 
 func LoadConfig(yamlFilePath string) (*Config, error) {

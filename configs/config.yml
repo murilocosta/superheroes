@@ -7,3 +7,6 @@ database:
     host: localhost
     port: 5432
     dbname: superheroes
+api:
+    endpoint: "https://superheroapi.com/api"
+    token: 3185322551504722
