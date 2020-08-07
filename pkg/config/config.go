@@ -7,22 +7,28 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+type ServerConfig struct {
+	Port string `yaml:"port", envconfig:"SERVER_PORT"`
+}
+
+type DatabaseConfig struct {
+	Driver   string `yaml:"driver", envconfig:"DATABASE_DRIVER"`
+	Username string `yaml:"username", envconfig:"DATABASE_USERNAME"`
+	Password string `yaml:"password", envconfig:"DATABASE_PASSWORD"`
+	Host     string `yaml:"host", envconfig:"DATABASE_HOST"`
+	Port     string `yaml:"port", envconfig:"DATABASE_PORT"`
+	DbName   string `yaml:"dbname", envconfig:"DATABASE_NAME"`
+}
+
+type ApiConfig struct {
+	Endpoint string `yaml:"endpoint", envconfig:"API_ENDPOINT"`
+	Token    string `yaml:"token", envconfig:"API_TOKEN"`
+}
+
 type Config struct {
-	Server struct {
-		Port string `yaml:"port", envconfig:"SERVER_PORT"`
-	} `yaml:"server"`
-	Database struct {
-		Driver   string `yaml:"driver", envconfig:"DB_DRIVER"`
-		Username string `yaml:"username", envconfig:"DB_USERNAME"`
-		Password string `yaml:"password", envconfig:"DB_PASSWORD"`
-		Host     string `yaml:"host", envconfig:"DB_HOST"`
-		Port     string `yaml:"port", envconfig:"DB_PORT"`
-		DbName   string `yaml:"dbname", envconfig:"DB_DBNAME"`
-	} `yaml:"database"`
-	Api struct {
-		Endpoint string `yaml:"endpoint", envconfig:"API_ENDPOINT"`
-		Token    string `yaml:"token", envconfig:"API_TOKEN"`
-	} `yaml:"api"`
+	Server   ServerConfig   `yaml:"server"`
+	Database DatabaseConfig `yaml:"database"`
+	Api      ApiConfig      `yaml:"api"`
 }
 
 func LoadConfig(yamlFilePath string) (*Config, error) {

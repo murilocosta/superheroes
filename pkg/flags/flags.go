@@ -8,7 +8,7 @@ import (
 
 func ParseFlags() (string, error) {
 	var configPath string
-	flag.StringVar(&configPath, "config", "../configs/config.yml", "Path to config file")
+	flag.StringVar(&configPath, "config", "./config.yml", "Path to configuration file")
 	flag.Parse()
 
 	if err := isPathValid(configPath); err != nil {
@@ -27,6 +27,5 @@ func isPathValid(filepath string) error {
 	if s.IsDir() {
 		return fmt.Errorf("'%s' is a directory", filepath)
 	}
-
 	return nil
 }
