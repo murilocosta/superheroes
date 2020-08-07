@@ -48,11 +48,11 @@ func TestReadEnvironmentVar(t *testing.T) {
 		t.Errorf("Env variable 'DATABASE_PASSWORD' is not as expected: %s", cfg.Database.Password)
 	}
 
-	if cfg.Api.Endpoint != expectedEndpoint {
-		t.Errorf("Env variable 'API_ENDPOINT' is not as expected: %s", cfg.Api.Endpoint)
+	if cfg.API.Endpoint != expectedEndpoint {
+		t.Errorf("Env variable 'API_ENDPOINT' is not as expected: %s", cfg.API.Endpoint)
 	}
 
-	if cfg.Api.Token != expectedToken {
-		t.Errorf("Env variable 'API_TOKEN' is not as expected: %s", cfg.Api.Token)
+	if cfg.API.Token != expectedToken {
+		t.Errorf("Env variable 'API_TOKEN' is not as expected: %s", cfg.API.Token)
 	}
 }
