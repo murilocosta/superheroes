@@ -12,8 +12,22 @@ func ParseConnectionURL(cfg *Config) (string, error) {
 		return "", err
 	}
 
+	return fillConnectionURL(cfg, tmpl)
+}
+
+func ParseMigrationConnectionURL(cfg *Config) (string, error) {
+	f := "postgres://{{.Username}}:{{.Password}}@{{.Host}}:{{.Port}}/{{.DbName}}?sslmode=disable"
+	tmpl, err := template.New("migration").Parse(f)
+	if err != nil {
+		return "", err
+	}
+
+	return fillConnectionURL(cfg, tmpl)
+}
+
+func fillConnectionURL(cfg *Config, tmpl *template.Template) (string, error) {
 	var conn bytes.Buffer
-	err = tmpl.Execute(&conn, cfg.Database)
+	err := tmpl.Execute(&conn, cfg.Database)
 	if err != nil {
 		return "", err
 	}

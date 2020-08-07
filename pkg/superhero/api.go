@@ -7,13 +7,13 @@ import (
 	"net/http"
 )
 
-type ExternalSuper struct {
-	ID   int64  `json:"id"`
+type RemoteSuper struct {
+	ID   string `json:"id"`
 	Name string `json:"name"`
 
 	Powerstats struct {
-		Intelligence int32 `json:"intelligence"`
-		Power        int32 `json:"power"`
+		Intelligence string `json:"intelligence"`
+		Power        string `json:"power"`
 	} `json:"powerstats"`
 
 	Biography struct {
@@ -31,9 +31,9 @@ type ExternalSuper struct {
 }
 
 type ResultQuerySuper struct {
-	Response   string           `json:"response"`
-	ResultsFor string           `json:"results-for"`
-	Results    []*ExternalSuper `json:"results"`
+	Response   string         `json:"response"`
+	ResultsFor string         `json:"results-for"`
+	Results    []*RemoteSuper `json:"results"`
 }
 
 type SuperHeroApi struct {
@@ -49,8 +49,8 @@ func (api *SuperHeroApi) buildRequestPath(endpoint string) string {
 	return fmt.Sprintf("%s/%s/%s", api.apiUrl, api.token, endpoint)
 }
 
-func (api *SuperHeroApi) FindByName(name string) ([]*ExternalSuper, error) {
-	tgt := api.buildRequestPath("search/name")
+func (api *SuperHeroApi) FindByName(name string) ([]*RemoteSuper, error) {
+	tgt := api.buildRequestPath("search/" + name)
 	resp, err := http.Get(tgt)
 	if err != nil {
 		return nil, err

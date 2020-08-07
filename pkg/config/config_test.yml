@@ -1,0 +1,9 @@
+server:
+    port: 7357
+database:
+    driver: test_driver
+    username: test_user
+    password: test_pass
+api:
+    endpoint: api_endpoint
+    token: api_token

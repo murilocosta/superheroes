@@ -5,24 +5,28 @@ import (
 	"testing"
 )
 
+const (
+	expectedPort       = "7357"
+	expectedDbDriver   = "test_driver"
+	expectedDbUser     = "test_user"
+	expectedDbPassword = "test_pass"
+	expectedEndpoint   = "api_endpoint"
+	expectedToken      = "api_token"
+)
+
 func TestReadYamlFile(t *testing.T) {
-	configFilePath := "./../../configs/config.yml"
+	configFilePath := "./config_test.yml"
 
 	var cfg Config
 	err := readYamlFile(configFilePath, &cfg)
 	if err != nil {
 		t.Errorf("Could not read from config file:\n%s", err)
 	}
+
+	testReadConfigObject(t, &cfg)
 }
 
 func TestReadEnvironmentVar(t *testing.T) {
-	expectedPort := "7357"
-	expectedDbDriver := "test_driver"
-	expectedDbUser := "test_user"
-	expectedDbPassword := "test_pass"
-	expectedEndpoint := "api_endpoint"
-	expectedToken := "api_token"
-
 	os.Setenv("SERVER_PORT", expectedPort)
 	os.Setenv("DATABASE_DRIVER", expectedDbDriver)
 	os.Setenv("DATABASE_USERNAME", expectedDbUser)
@@ -32,6 +36,10 @@ func TestReadEnvironmentVar(t *testing.T) {
 
 	var cfg Config
 	readEnvironmentVar(&cfg)
+	testReadConfigObject(t, &cfg)
+}
+
+func testReadConfigObject(t *testing.T, cfg *Config) {
 	if cfg.Server.Port != expectedPort {
 		t.Errorf("Env variable 'SERVER_PORT' is not as expected: %s", cfg.Server.Port)
 	}
