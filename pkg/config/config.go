@@ -8,6 +8,7 @@ import (
 )
 
 type ServerConfig struct {
+	Host string `yaml:"host" envconfig:"SERVER_HOST"`
 	Port string `yaml:"port" envconfig:"SERVER_PORT"`
 }
 

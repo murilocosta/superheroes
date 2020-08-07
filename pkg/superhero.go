@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -16,8 +18,6 @@ func main() {
 	cfg, err := config.LoadConfig(cfgPath)
 	handleError(err)
 
-	fmt.Println(cfg)
-
 	conn, err := config.ParseConnectionURL(cfg)
 	handleError(err)
 
@@ -25,6 +25,14 @@ func main() {
 	handleError(err)
 	defer db.Close()
 
+	srv := &http.Server{
+		Addr:         cfg.Server.Host + ":" + cfg.Server.Port,
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	log.Fatal(srv.ListenAndServe())
 }
 
 func handleError(err error) {

@@ -3,7 +3,7 @@ package config
 import "testing"
 
 func TestParseConnectionURL(t *testing.T) {
-	expected := "host=localhost port=7357 user=test_u password=test_p dbname=test_db"
+	expected := "host=localhost port=7357 user=test_u password=test_p dbname=test_db sslmode=disable"
 	cfg := &Config{
 		Database: DatabaseConfig{
 			Host:     "localhost",

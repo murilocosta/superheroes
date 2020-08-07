@@ -6,7 +6,7 @@ import (
 )
 
 func ParseConnectionURL(cfg *Config) (string, error) {
-	f := "host={{.Host}} port={{.Port}} user={{.Username}} password={{.Password}} dbname={{.DbName}}"
+	f := "host={{.Host}} port={{.Port}} user={{.Username}} password={{.Password}} dbname={{.DbName}} sslmode=disable"
 	tmpl, err := template.New("database").Parse(f)
 	if err != nil {
 		return "", err
