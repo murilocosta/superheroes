@@ -10,7 +10,7 @@ const (
 )
 
 func TestFindByName(t *testing.T) {
-	api := NewSuperHeroApi(apiURL, token)
+	api := NewSuperApi(apiURL, token)
 	rsp, err := api.FindByName("superman")
 	if err != nil {
 		t.Errorf("Could not make request to API:\n%s", err)

@@ -30,26 +30,26 @@ type RemoteSuper struct {
 	} `json:"image"`
 }
 
-type ResultQuerySuper struct {
+type ApiResultQuery struct {
 	Response   string         `json:"response"`
 	ResultsFor string         `json:"results-for"`
 	Results    []*RemoteSuper `json:"results"`
 }
 
-type SuperHeroApi struct {
+type SuperApi struct {
 	apiURL string
 	token  string
 }
 
-func NewSuperHeroApi(apiURL string, token string) *SuperHeroApi {
-	return &SuperHeroApi{apiURL, token}
+func NewSuperApi(apiURL string, token string) *SuperApi {
+	return &SuperApi{apiURL, token}
 }
 
-func (api *SuperHeroApi) buildRequestPath(endpoint string) string {
+func (api *SuperApi) buildRequestPath(endpoint string) string {
 	return fmt.Sprintf("%s/%s/%s", api.apiURL, api.token, endpoint)
 }
 
-func (api *SuperHeroApi) FindByName(name string) ([]*RemoteSuper, error) {
+func (api *SuperApi) FindByName(name string) ([]*RemoteSuper, error) {
 	tgt := api.buildRequestPath("search/" + name)
 	resp, err := http.Get(tgt)
 	if err != nil {
@@ -63,7 +63,7 @@ func (api *SuperHeroApi) FindByName(name string) ([]*RemoteSuper, error) {
 		return nil, err
 	}
 
-	var result ResultQuerySuper
+	var result ApiResultQuery
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
