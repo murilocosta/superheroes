@@ -73,7 +73,7 @@ func (repo *superRepositoryImpl) FindByName(name string) ([]*Super, error) {
 func (repo *superRepositoryImpl) List(superType SuperType) ([]*Super, error) {
 	var result []*Super
 	var err error
-	if superType == "" {
+	if superType == NoType {
 		err = repo.db.Find(&result).Error
 	} else {
 		err = repo.db.Where("type LIKE ?", superType).Find(&result).Error

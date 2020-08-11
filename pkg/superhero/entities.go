@@ -5,6 +5,7 @@ type SuperType string
 const (
 	HeroType    SuperType = "HERO"
 	VillainType SuperType = "VILLAIN"
+	NoType      SuperType = ""
 )
 
 type Super struct {

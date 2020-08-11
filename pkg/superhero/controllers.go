@@ -69,30 +69,73 @@ func (ctrl *ctrlImpl) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *ctrlImpl) FindByUUIDHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	uuid, err := strconv.ParseInt(params["uuid"], 10, 64)
 
+	if err != nil {
+		writeRequestError(w, 500, "Could not process request")
+		return
+	}
+
+	resp, err := ctrl.srv.FindByUUID(uuid)
+	if err != nil {
+		writeRequestError(w, 500, "Could not process request")
+		return
+	}
+
+	err = writeRequestResponse(w, resp)
+
+	if err != nil {
+		writeRequestError(w, 500, "Could not deliver response")
+	}
 }
 
 func (ctrl *ctrlImpl) FindByNameHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	if name, ok := params["name"]; ok {
+		resp, err := ctrl.srv.FindByName(name)
 
+		if err != nil {
+			writeRequestError(w, 500, "Could not process request")
+			return
+		}
+
+		err = writeRequestResponse(w, resp)
+
+		if err != nil {
+			writeRequestError(w, 500, "Could not deliver response")
+		}
+	} else {
+		writeRequestError(w, 500, "Could not process request")
+	}
 }
 
 func (ctrl *ctrlImpl) ListHandler(w http.ResponseWriter, r *http.Request) {
-	superType := r.URL.Query().Get("type")
-	resp, err := ctrl.srv.ListByType(SuperType(superType))
+	params := mux.Vars(r)
 
-	enc := json.NewEncoder(w)
+	var superType SuperType
+	if t, ok := params["type"]; ok {
+		superType = SuperType(t)
+	} else {
+		superType = NoType
+	}
+
+	resp, err := ctrl.srv.ListByType(superType)
+	if err != nil {
+		writeRequestError(w, 500, "Could not process request")
+		return
+	}
+
+	err = writeRequestResponse(w, resp)
+
+	if err != nil {
+		writeRequestError(w, 500, "Could not deliver response")
+	}
+}
+
+func writeRequestResponse(w http.ResponseWriter, data interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
-	if err != nil {
-		writeRequestErrorJSON(w, enc, 400, "Could not find any super")
-		return
-	}
-
-	err = enc.Encode(resp)
-
-	if err != nil {
-		writeRequestErrorJSON(w, enc, 500, "Could not deliver response")
-		return
-	}
+	return json.NewEncoder(w).Encode(data)
 }
 
 func writeRequestError(w http.ResponseWriter, status int, msg string) {

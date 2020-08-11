@@ -8,6 +8,8 @@ import (
 type Service interface {
 	Create(name string) error
 	Delete(id int64) error
+	FindByUUID(uuid int64) (*Super, error)
+	FindByName(name string) ([]*Super, error)
 	ListByType(superType SuperType) ([]*Super, error)
 }
 
@@ -60,6 +62,14 @@ func (s *serviceImpl) Delete(id int64) error {
 	}
 
 	return nil
+}
+
+func (s *serviceImpl) FindByUUID(uuid int64) (*Super, error) {
+	return s.repo.FindByUUID(uuid)
+}
+
+func (s *serviceImpl) FindByName(name string) ([]*Super, error) {
+	return s.repo.FindByName(name)
 }
 
 func (s *serviceImpl) ListByType(superType SuperType) ([]*Super, error) {

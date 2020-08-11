@@ -10,5 +10,5 @@ build:
 	go build -o cmd/superhero pkg/superhero.go
 
 .PHONY: docker
-docker: build
+docker:
 	docker build . -t superhero:1.0.0
