@@ -139,13 +139,8 @@ func writeRequestResponse(w http.ResponseWriter, data interface{}) error {
 }
 
 func writeRequestError(w http.ResponseWriter, status int, msg string) {
-	enc := json.NewEncoder(w)
-	writeRequestErrorJSON(w, enc, status, msg)
-}
-
-func writeRequestErrorJSON(w http.ResponseWriter, enc *json.Encoder, status int, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	errorMsg := newErrorResult(msg)
-	enc.Encode(errorMsg)
+	json.NewEncoder(w).Encode(errorMsg)
 }
