@@ -3,72 +3,106 @@ package superhero
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
-type SuperHeroCtrl interface {
-	AddSuper(w http.ResponseWriter, r *http.Request)
-	RemoveSuper(w http.ResponseWriter, r *http.Request)
-	ListSuper(w http.ResponseWriter, r *http.Request)
-	FindSuper(w http.ResponseWriter, r *http.Request)
+type errorResult struct {
+	message string
 }
 
-type superHeroCtrlImpl struct {
-	srv SuperHeroService
+func newErrorResult(msg string) *errorResult {
+	return &errorResult{message: msg}
 }
 
-func NewSuperHeroCtrl(srv SuperHeroService) SuperHeroCtrl {
-	return &superHeroCtrlImpl{srv}
+type Ctrl interface {
+	CreateHandler(w http.ResponseWriter, r *http.Request)
+	DeleteHandler(w http.ResponseWriter, r *http.Request)
+	FindByUUIDHandler(w http.ResponseWriter, r *http.Request)
+	FindByNameHandler(w http.ResponseWriter, r *http.Request)
+	ListHandler(w http.ResponseWriter, r *http.Request)
 }
 
-func (ctrl *superHeroCtrlImpl) AddSuper(w http.ResponseWriter, r *http.Request) {
+type ctrlImpl struct {
+	srv Service
+}
+
+func NewCtrl(srv Service) Ctrl {
+	return &ctrlImpl{srv}
+}
+
+func (ctrl *ctrlImpl) CreateHandler(w http.ResponseWriter, r *http.Request) {
 	var params map[string]string
 	err := json.NewDecoder(r.Body).Decode(&params)
-	enc := json.NewEncoder(w)
 
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(500)
-		enc.Encode(&map[string]string{"message": "Could not process request"})
+		writeRequestError(w, 500, "Could not process request")
 		return
 	}
 
-	err = ctrl.srv.AddSuper(params["super_name"])
+	err = ctrl.srv.Create(params["super_name"])
 
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(400)
-		enc.Encode(&map[string]string{"message": "Could not save super"})
+		writeRequestError(w, 400, "Could not save super")
 		return
 	}
 
 	w.WriteHeader(200)
 }
 
-func (ctrl *superHeroCtrlImpl) RemoveSuper(w http.ResponseWriter, r *http.Request) {
+func (ctrl *ctrlImpl) DeleteHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	superID, err := strconv.ParseInt(params["id"], 10, 64)
+
+	if err != nil {
+		writeRequestError(w, 500, "Could not process request")
+		return
+	}
+
+	err = ctrl.srv.Delete(superID)
+
+	if err != nil {
+		writeRequestError(w, 400, "Could not delete super")
+		return
+	}
+}
+
+func (ctrl *ctrlImpl) FindByUUIDHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (ctrl *superHeroCtrlImpl) ListSuper(w http.ResponseWriter, r *http.Request) {
+func (ctrl *ctrlImpl) FindByNameHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (ctrl *ctrlImpl) ListHandler(w http.ResponseWriter, r *http.Request) {
 	superType := r.URL.Query().Get("type")
-	resp, err := ctrl.srv.ListSuper(SuperType(superType))
+	resp, err := ctrl.srv.ListByType(SuperType(superType))
 
 	enc := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
-		w.WriteHeader(400)
-		enc.Encode(&map[string]string{"message": "Could not find any super"})
+		writeRequestErrorJSON(w, enc, 400, "Could not find any super")
 		return
 	}
 
 	err = enc.Encode(resp)
 
 	if err != nil {
-		w.WriteHeader(500)
-		enc.Encode(&map[string]string{"message": "Could not deliver response"})
+		writeRequestErrorJSON(w, enc, 500, "Could not deliver response")
 		return
 	}
 }
 
-func (ctrl *superHeroCtrlImpl) FindSuper(w http.ResponseWriter, r *http.Request) {
+func writeRequestError(w http.ResponseWriter, status int, msg string) {
+	enc := json.NewEncoder(w)
+	writeRequestErrorJSON(w, enc, status, msg)
+}
 
+func writeRequestErrorJSON(w http.ResponseWriter, enc *json.Encoder, status int, msg string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	errorMsg := newErrorResult(msg)
+	enc.Encode(errorMsg)
 }

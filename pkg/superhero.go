@@ -27,7 +27,7 @@ func main() {
 	handleError(err)
 	defer db.Close()
 
-	app := setupApp(cfg, db)
+	app := newApplicationHandler(cfg, db)
 	addr := cfg.Server.Host + ":" + cfg.Server.Port
 	srv := &http.Server{
 		Addr:         addr,
@@ -47,10 +47,10 @@ func handleError(err error) {
 	}
 }
 
-func setupApp(cfg *config.Config, db *gorm.DB) http.Handler {
+func newApplicationHandler(cfg *config.Config, db *gorm.DB) http.Handler {
 	r := superhero.NewSuperRepository(db)
-	api := superhero.NewSuperHeroApi(cfg.API.Endpoint, cfg.API.Token)
-	s := superhero.NewSuperHeroService(api, r)
-	ctrl := superhero.NewSuperHeroCtrl(s)
-	return superhero.NewHeroRouter(ctrl)
+	api := superhero.NewSuperApi(cfg.API.Endpoint, cfg.API.Token)
+	s := superhero.NewService(api, r)
+	ctrl := superhero.NewCtrl(s)
+	return superhero.NewRouter(ctrl)
 }

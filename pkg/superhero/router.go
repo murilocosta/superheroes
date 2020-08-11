@@ -7,15 +7,19 @@ import (
 	"github.com/rs/cors"
 )
 
-func NewHeroRouter(ctrl SuperHeroCtrl) http.Handler {
+func NewRouter(ctrl Ctrl) http.Handler {
 	r := mux.NewRouter()
-	r.HandleFunc("/", handleHome)
-	r.HandleFunc("/supers", ctrl.AddSuper).Methods("POST")
-	r.HandleFunc("/supers", ctrl.ListSuper).Methods("GET")
+	r.HandleFunc("/", homeHandler)
+	r.HandleFunc("/supers", ctrl.CreateHandler).Methods("POST")
+	r.HandleFunc("/supers", ctrl.ListHandler).Methods("GET")
+	r.HandleFunc("/supers/type/{type}", ctrl.ListHandler).Methods("GET")
+	r.HandleFunc("/supers/name/{name}", ctrl.FindByNameHandler).Methods("GET")
+	r.HandleFunc("/supers/{uuid}", ctrl.FindByUUIDHandler).Methods("GET")
+	r.HandleFunc("/supers/{id}", ctrl.DeleteHandler).Methods("DELETE")
 	return cors.Default().Handler(r)
 }
 
-func handleHome(w http.ResponseWriter, r *http.Request) {
-	msg := []byte("Welcome to superhero API")
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	msg := []byte("Welcome to SuperHeroes API")
 	w.Write(msg)
 }

@@ -5,21 +5,22 @@ import (
 	"strconv"
 )
 
-type SuperHeroService interface {
-	AddSuper(name string) error
-	ListSuper(superType SuperType) ([]*Super, error)
+type Service interface {
+	Create(name string) error
+	Delete(id int64) error
+	ListByType(superType SuperType) ([]*Super, error)
 }
 
-type superHeroServiceImpl struct {
-	api  *SuperHeroApi
+type serviceImpl struct {
+	api  *SuperApi
 	repo SuperRepository
 }
 
-func NewSuperHeroService(api *SuperHeroApi, repo SuperRepository) SuperHeroService {
-	return &superHeroServiceImpl{api, repo}
+func NewService(api *SuperApi, repo SuperRepository) Service {
+	return &serviceImpl{api, repo}
 }
 
-func (s *superHeroServiceImpl) AddSuper(name string) error {
+func (s *serviceImpl) Create(name string) error {
 	if name == "" {
 		return errors.New("Super name is required")
 	}
@@ -39,7 +40,29 @@ func (s *superHeroServiceImpl) AddSuper(name string) error {
 	return nil
 }
 
-func (s *superHeroServiceImpl) ListSuper(superType SuperType) ([]*Super, error) {
+func (s *serviceImpl) Delete(id int64) error {
+	if id <= 0 {
+		return errors.New("Must suply a valid ID")
+	}
+
+	res, err := s.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		return errors.New("Could not find the ID")
+	}
+
+	err = s.repo.Delete(res.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *serviceImpl) ListByType(superType SuperType) ([]*Super, error) {
 	return s.repo.List(superType)
 }
 
