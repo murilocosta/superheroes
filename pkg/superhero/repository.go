@@ -8,7 +8,8 @@ type SuperRepository interface {
 	Save(s *Super) error
 	SaveMany(s []*Super) error
 	Delete(id int64) error
-	FindByUuid(uuid int64) (*Super, error)
+	FindByID(id int64) (*Super, error)
+	FindByUUID(uuid int64) (*Super, error)
 	FindByName(name string) ([]*Super, error)
 	List(superType SuperType) ([]*Super, error)
 }
@@ -39,23 +40,46 @@ func (repo *superRepositoryImpl) SaveMany(ss []*Super) error {
 }
 
 func (repo *superRepositoryImpl) Delete(id int64) error {
-	return nil
+	return repo.db.Delete(&id).Error
 }
 
-func (repo *superRepositoryImpl) FindByUuid(uuid int64) (*Super, error) {
-	return nil, nil
+func (repo *superRepositoryImpl) FindByID(id int64) (*Super, error) {
+	var result Super
+	err := repo.db.Where("id = ?", id).First(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (repo *superRepositoryImpl) FindByUUID(uuid int64) (*Super, error) {
+	var result Super
+	err := repo.db.Where("uuid = ?", uuid).First(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
 }
 
 func (repo *superRepositoryImpl) FindByName(name string) ([]*Super, error) {
-	return nil, nil
+	var result []*Super
+	err := repo.db.Where("name LIKE ?", "%"+name+"%").Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (repo *superRepositoryImpl) List(superType SuperType) ([]*Super, error) {
 	var result []*Super
+	var err error
 	if superType == "" {
-		repo.db.Find(&result)
+		err = repo.db.Find(&result).Error
 	} else {
-		repo.db.Where("type LIKE ?", superType).Find(&result)
+		err = repo.db.Where("type LIKE ?", superType).Find(&result).Error
+	}
+	if err != nil {
+		return nil, err
 	}
 	return result, nil
 }
