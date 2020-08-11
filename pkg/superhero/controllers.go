@@ -66,6 +66,8 @@ func (ctrl *ctrlImpl) DeleteHandler(w http.ResponseWriter, r *http.Request) {
 		writeRequestError(w, 400, "Could not delete super")
 		return
 	}
+
+	w.WriteHeader(200)
 }
 
 func (ctrl *ctrlImpl) FindByUUIDHandler(w http.ResponseWriter, r *http.Request) {
@@ -135,6 +137,7 @@ func (ctrl *ctrlImpl) ListHandler(w http.ResponseWriter, r *http.Request) {
 
 func writeRequestResponse(w http.ResponseWriter, data interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
 	return json.NewEncoder(w).Encode(data)
 }
 
