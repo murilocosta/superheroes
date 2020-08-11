@@ -10,8 +10,8 @@ import (
 func NewHeroRouter(ctrl SuperHeroCtrl) http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/", handleHome)
-	r.HandleFunc("/super", ctrl.AddSuper).Methods("POST")
-	r.HandleFunc("/super", ctrl.ListSuper).Methods("GET")
+	r.HandleFunc("/supers", ctrl.AddSuper).Methods("POST")
+	r.HandleFunc("/supers", ctrl.ListSuper).Methods("GET")
 	return cors.Default().Handler(r)
 }
 

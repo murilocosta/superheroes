@@ -29,14 +29,16 @@ func (ctrl *superHeroCtrlImpl) AddSuper(w http.ResponseWriter, r *http.Request) 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(500)
 		enc.Encode(&map[string]string{"message": "Could not process request"})
+		return
 	}
 
-	err = ctrl.srv.AddSuper(params["super-name"])
+	err = ctrl.srv.AddSuper(params["super_name"])
 
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
 		enc.Encode(&map[string]string{"message": "Could not save super"})
+		return
 	}
 
 	w.WriteHeader(200)
@@ -55,6 +57,7 @@ func (ctrl *superHeroCtrlImpl) ListSuper(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		w.WriteHeader(400)
 		enc.Encode(&map[string]string{"message": "Could not find any super"})
+		return
 	}
 
 	err = enc.Encode(resp)
@@ -62,6 +65,7 @@ func (ctrl *superHeroCtrlImpl) ListSuper(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		w.WriteHeader(500)
 		enc.Encode(&map[string]string{"message": "Could not deliver response"})
+		return
 	}
 }
 

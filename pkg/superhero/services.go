@@ -63,6 +63,6 @@ func convertToSuper(r *RemoteSuper) *Super {
 		Intelligence: intelligence,
 		Power:        power,
 		Occupation:   r.Work.Occupation,
-		Image:        r.Image.Url,
+		Image:        r.Image.URL,
 	}
 }

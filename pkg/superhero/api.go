@@ -26,7 +26,7 @@ type RemoteSuper struct {
 	} `json:"work"`
 
 	Image struct {
-		Url string `json:"url"`
+		URL string `json:"url"`
 	} `json:"image"`
 }
 
@@ -37,16 +37,16 @@ type ResultQuerySuper struct {
 }
 
 type SuperHeroApi struct {
-	apiUrl string
+	apiURL string
 	token  string
 }
 
-func NewSuperHeroApi(apiUrl string, token string) *SuperHeroApi {
-	return &SuperHeroApi{apiUrl, token}
+func NewSuperHeroApi(apiURL string, token string) *SuperHeroApi {
+	return &SuperHeroApi{apiURL, token}
 }
 
 func (api *SuperHeroApi) buildRequestPath(endpoint string) string {
-	return fmt.Sprintf("%s/%s/%s", api.apiUrl, api.token, endpoint)
+	return fmt.Sprintf("%s/%s/%s", api.apiURL, api.token, endpoint)
 }
 
 func (api *SuperHeroApi) FindByName(name string) ([]*RemoteSuper, error) {

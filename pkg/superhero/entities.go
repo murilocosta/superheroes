@@ -8,13 +8,13 @@ const (
 )
 
 type Super struct {
-	ID           int64  `gorm:"PRIMARY_KEY"`
-	UUID         int64  `gorm:"UNIQUE"`
-	FullName     string `gorm:"column:full_name"`
-	Name         string
-	Intelligence int64
-	Power        int64
-	Occupation   string
-	Image        string
-	Type         SuperType
+	ID           int64     `json:"id" gorm:"PRIMARY_KEY"`
+	UUID         int64     `json:"uuid" gorm:"UNIQUE"`
+	FullName     string    `json:"full_name" gorm:"column:full_name"`
+	Name         string    `json:"name"`
+	Intelligence int64     `json:"intelligence"`
+	Power        int64     `json:"power"`
+	Occupation   string    `json:"occupation"`
+	Image        string    `json:"image"`
+	Type         SuperType `json:"type"`
 }
