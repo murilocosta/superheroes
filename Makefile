@@ -7,7 +7,7 @@ test:
 
 .PHONY: build
 build:
-	go build -o cmd/superhero pkg/superhero.go
+	go build -o cmd/superhero/superhero cmd/superhero/superhero.go
 
 .PHONY: docker
 docker:

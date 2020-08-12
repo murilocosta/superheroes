@@ -1,1 +1,1 @@
-DROP TABLE super;
+DROP TABLE IF EXISTS super;

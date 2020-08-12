@@ -1,4 +1,4 @@
-CREATE TABLE supers (
+CREATE TABLE IF NOT EXISTS supers (
     id           serial,
     uuid         integer UNIQUE,
     "type"       varchar(8),

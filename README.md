@@ -14,7 +14,12 @@ go get ./...
 go test ./...
 ```
 
+### To migrate the schema:
+```
+go run ./cmd/migrate/migrate.go
+```
+
 ### To start the server:
 ```
-go run ./pkg/superhero.go -config ./configs/config.yml
+go run ./cmd/superhero/superhero.go -config ./configs/config.yml
 ```

@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	"github.com/murilocosta/superheroes/pkg/config"
-	"github.com/murilocosta/superheroes/pkg/flags"
-	"github.com/murilocosta/superheroes/pkg/superhero"
+	"github.com/murilocosta/superheroes/internal/config"
+	"github.com/murilocosta/superheroes/internal/flags"
+	"github.com/murilocosta/superheroes/internal/superhero"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -43,7 +43,7 @@ func main() {
 
 func handleError(err error) {
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
