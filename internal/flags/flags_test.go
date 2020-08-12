@@ -7,7 +7,7 @@ import (
 )
 
 func TestParseFlags(t *testing.T) {
-	expected := "./flags_test.yml"
+	expected := "./testdata/flags_test.yml"
 	os.Args[1] = fmt.Sprintf("-config=%s", expected)
 
 	path, err := ParseFlags()

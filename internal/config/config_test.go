@@ -15,7 +15,7 @@ const (
 )
 
 func TestReadYamlFile(t *testing.T) {
-	configFilePath := "./config_test.yml"
+	configFilePath := "./testdata/config_test.yml"
 
 	var cfg Config
 	err := readYamlFile(configFilePath, &cfg)
