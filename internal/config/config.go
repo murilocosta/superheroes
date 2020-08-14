@@ -12,6 +12,11 @@ type ServerConfig struct {
 	Port string `yaml:"port" envconfig:"SERVER_PORT"`
 }
 
+type LoggingConfig struct {
+	Path     string `yaml:"path"`
+	FileName string `yaml:"filename"`
+}
+
 type DatabaseConfig struct {
 	Driver   string `yaml:"driver" envconfig:"DATABASE_DRIVER"`
 	Username string `yaml:"username" envconfig:"DATABASE_USERNAME"`
@@ -28,6 +33,7 @@ type ApiConfig struct {
 
 type Config struct {
 	Server   ServerConfig   `yaml:"server"`
+	Logging  LoggingConfig  `yaml:logging`
 	Database DatabaseConfig `yaml:"database"`
 	API      ApiConfig      `yaml:"api"`
 }

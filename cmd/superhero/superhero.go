@@ -9,6 +9,7 @@ import (
 	"github.com/murilocosta/superheroes/internal/config"
 	"github.com/murilocosta/superheroes/internal/flags"
 	"github.com/murilocosta/superheroes/internal/superhero"
+	"github.com/murilocosta/superheroes/pkg/logger"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -20,12 +21,16 @@ func main() {
 	cfg, err := config.LoadConfig(cfgPath)
 	handleError(err)
 
+	lw, err := logger.NewLogRotation(cfg.Logging.Path, cfg.Logging.FileName)
+	handleError(err)
+	log.SetOutput(lw)
+
 	conn, err := config.ParseConnectionURL(cfg)
 	handleError(err)
 
 	db, err := gorm.Open(cfg.Database.Driver, conn)
-	handleError(err)
 	defer db.Close()
+	handleError(err)
 
 	app := newApplicationHandler(cfg, db)
 	addr := cfg.Server.Host + ":" + cfg.Server.Port

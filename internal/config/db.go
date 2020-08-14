@@ -16,7 +16,7 @@ func ParseConnectionURL(cfg *Config) (string, error) {
 }
 
 func ParseMigrationConnectionURL(cfg *Config) (string, error) {
-	f := "postgres://{{.Username}}:{{.Password}}@{{.Host}}:{{.Port}}/{{.DbName}}?sslmode=disable"
+	f := "{{.Driver}}://{{.Username}}:{{.Password}}@{{.Host}}:{{.Port}}/{{.DbName}}?sslmode=disable"
 	tmpl, err := template.New("migration").Parse(f)
 	if err != nil {
 		return "", err
